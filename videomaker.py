@@ -7,7 +7,10 @@ def images_to_video(image_files, fps):
     img_array = []
     frame_size = None
 
-    for uploaded_file in image_files:
+    # Sort the uploaded files by name
+    sorted_files = sorted(image_files, key=lambda x: x.name)
+
+    for uploaded_file in sorted_files:
         # Read the file as bytes, then convert it to an image
         bytes_data = uploaded_file.read()
         nparr = np.frombuffer(bytes_data, np.uint8)
@@ -16,12 +19,15 @@ def images_to_video(image_files, fps):
         if img is None:
             continue
 
-        # Set frame size based on first image
+        # Set frame size based on the first image
         if frame_size is None:
             frame_size = (img.shape[1], img.shape[0])
 
         img = cv2.resize(img, frame_size)
         img_array.append(img)
+
+    # Rest of your function...
+
 
     # Temporary file to store video
     with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_file:
